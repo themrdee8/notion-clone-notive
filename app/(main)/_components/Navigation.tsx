@@ -1,20 +1,40 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { ChevronsLeft, MenuIcon, Plus } from "lucide-react";
-import { usePathname } from "next/navigation";
+import {
+  ChevronsLeft,
+  MenuIcon,
+  Plus,
+  PlusCircle,
+  Search,
+  Settings,
+  Trash,
+} from "lucide-react";
+import { useParams, usePathname } from "next/navigation";
 import { ElementRef, useRef, useState, useEffect } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import UserItem from "./UserItem";
-import { useMutation, useQuery } from "convex/react";
+import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import Item from "./Item";
 import { toast } from "sonner";
+import DocumentList from "./DocumentList";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import TrashBox from "./TrashBox";
+import { useSearch } from "@/hooks/UseSearch";
+import { useSettings } from "@/hooks/UseSettings";
+import { Navbar } from "./Navbar";
 
 export const Navigation = () => {
+  const settings = useSettings();
+  const search = useSearch();
+  const params = useParams();
   const pathname = usePathname();
   const isMobile = useMediaQuery("(max-width: 768px)");
-  const documents = useQuery(api.documents.get);
   const create = useMutation(api.documents.create);
 
   const isResizingRef = useRef(false);
@@ -100,13 +120,13 @@ export const Navigation = () => {
 
   const handleCreate = () => {
     const promise = create({ title: "Untitled" });
-    
+
     toast.promise(promise, {
       loading: "Creating a new note...",
       success: "New note created!",
-      error: "Failed to create new note."
-    })
-  }
+      error: "Failed to create new note.",
+    });
+  };
 
   return (
     <>
@@ -130,12 +150,24 @@ export const Navigation = () => {
         </div>
         <div>
           <UserItem />
-          <Item onClick={handleCreate} label="New page" icon={Plus} />
+          <Item onClick={search.onOpen} label="Search" isSearch icon={Search} />
+          <Item onClick={settings.onOpen} label="Settings" icon={Settings} />
+          <Item onClick={handleCreate} label="New page" icon={PlusCircle} />
         </div>
         <div className="mt-4">
-          {documents?.map((document) => (
-            <p key={document._id}>{document.title}</p>
-          ))}
+          <DocumentList />
+          <Item onClick={handleCreate} label="Add a page" icon={Plus} />
+          <Popover>
+            <PopoverTrigger className="mt-4 w-full">
+              <Item label="Trash" icon={Trash} />
+            </PopoverTrigger>
+            <PopoverContent
+              className="w-72 p-0"
+              side={isMobile ? "bottom" : "right"}
+            >
+              <TrashBox />
+            </PopoverContent>
+          </Popover>
         </div>
         <div
           onMouseDown={handleMouseDown}
@@ -151,15 +183,19 @@ export const Navigation = () => {
           isMobile && "left-0 w-full"
         )}
       >
-        <nav className="px-3 py-2 bg-transparent w-full">
-          {isCollapsed && (
-            <MenuIcon
-              onClick={resetWidth}
-              role="button"
-              className="h-6 w-6 text-muted-foreground"
-            />
-          )}
-        </nav>
+        {!!params.documentId ? (
+          <Navbar isCollapsed={isCollapsed} onResetWidth={resetWidth} />
+        ) : (
+          <nav className="px-3 py-2 bg-transparent w-full">
+            {isCollapsed && (
+              <MenuIcon
+                onClick={resetWidth}
+                role="button"
+                className="h-6 w-6 text-muted-foreground"
+              />
+            )}
+          </nav>
+        )}
       </div>
     </>
   );

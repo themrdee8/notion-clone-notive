@@ -7,7 +7,7 @@ import { ModeToggle } from "@/components/mode-toggle";
 import { useConvexAuth } from "convex/react";
 import { SignInButton, UserButton } from "@clerk/clerk-react";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/providers/spinner";
+import { Spinner } from "@/components/spinner";
 import Link from "next/link";
 
 const Navbar = () => {
@@ -38,10 +38,8 @@ const Navbar = () => {
         )}
         {isAuthenticated && !isLoading && (
           <>
-            <Button variant="ghost" size='sm' asChild >
-              <Link href="/documents" >
-                Enter Notive
-              </Link>
+            <Button variant="ghost" size="sm" asChild>
+              <Link href="/documents">Enter Notive</Link>
             </Button>
             <UserButton afterSignOutUrl="/" />
           </>
