@@ -10,3 +10,4 @@ and convex for its backend.
 - Convex
 - Clerk
 - Shadcn Ui
+- EdgeStore
