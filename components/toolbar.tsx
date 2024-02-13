@@ -119,13 +119,13 @@ const Toolbar = ({ initialData, preview }: ToolbarProps) => {
           value={value}
           onBlur={disableInput}
           onKeyDown={onKeyDown}
-          className="font-semibold text-5xl bg-transparent break-words resize-none outline-none text-[#3f3f3f] dark:text-[#cfcfcf]"
+          className="font-bold text-5xl bg-transparent break-words resize-none outline-none text-[#3f3f3f] dark:text-[#cfcfcf]"
         />
       ) : (
         <div
           role="button"
           onClick={enableInput}
-          className="pb-[11.5px] text-5xl font-semibold break-words outline-none text-[#3f3f3f] dark:text-[#cfcfcf]"
+          className="pb-[11.5px] text-5xl font-bold break-words outline-none text-[#3f3f3f] dark:text-[#cfcfcf]"
         >
           {initialData.title}
         </div>
