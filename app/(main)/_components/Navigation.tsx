@@ -123,7 +123,7 @@ export const Navigation = () => {
     const promise = create({ title: "Untitled" }).then((documentId) =>
       router.push(`/documents/${documentId}`)
     );
-    
+
     toast.promise(promise, {
       loading: "Creating a new note...",
       success: "New note created!",
